@@ -6,7 +6,7 @@ from groq import Groq
 
 
 # ============================================================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # ============================================================
 
 st.set_page_config(
@@ -118,15 +118,6 @@ if st.session_state.theme == "dark":
     border_color = "#33264d"
     input_color = "#211a30"
 
-elif st.session_state.theme == "light":
-
-    bg_color = "#faf9ff"
-    card_color = "#ffffff"
-    text_color = "#24164f"
-    secondary_text = "#716b82"
-    border_color = "#e7dfff"
-    input_color = "#ffffff"
-
 else:
 
     bg_color = "#faf9ff"
@@ -147,16 +138,8 @@ st.markdown(
 
 .stApp {{
     background:
-        radial-gradient(
-            circle at 10% 10%,
-            #eee7ff 0%,
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 90% 90%,
-            #e8ddff 0%,
-            transparent 30%
-        ),
+        radial-gradient(circle at 10% 10%, #eee7ff 0%, transparent 30%),
+        radial-gradient(circle at 90% 90%, #e8ddff 0%, transparent 30%),
         {bg_color};
 
     color: {text_color};
@@ -168,36 +151,19 @@ st.markdown(
     padding-bottom: 3rem;
 }}
 
-.top-bar {{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}}
-
 .app-mini-title {{
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 800;
     color: {text_color};
 }}
 
 .hero {{
-    background:
-        linear-gradient(
-            135deg,
-            #4c1d95,
-            #6d28d9,
-            #8b5cf6
-        );
-
+    background: linear-gradient(135deg, #4c1d95, #6d28d9, #8b5cf6);
     padding: 55px 30px;
     border-radius: 30px;
     text-align: center;
     color: white;
-
-    box-shadow:
-        0 20px 50px rgba(91, 33, 182, 0.28);
-
+    box-shadow: 0 20px 50px rgba(91, 33, 182, 0.28);
     margin-bottom: 40px;
 }}
 
@@ -212,7 +178,7 @@ st.markdown(
     opacity: 0.92;
 }}
 
-.offline-badge {{
+.cloud-badge {{
     display: inline-block;
     margin-top: 24px;
     padding: 10px 22px;
@@ -246,9 +212,7 @@ st.markdown(
     padding: 28px;
     min-height: 205px;
     border: 1px solid {border_color};
-
-    box-shadow:
-        0 8px 25px rgba(50,30,100,0.07);
+    box-shadow: 0 8px 25px rgba(50,30,100,0.07);
 }}
 
 .feature-icon {{
@@ -300,14 +264,7 @@ st.markdown(
     width: 100%;
     border: none;
     border-radius: 14px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #6d28d9,
-            #8b5cf6
-        );
-
+    background: linear-gradient(135deg, #6d28d9, #8b5cf6);
     color: white;
     font-weight: 700;
     padding: 12px 20px;
@@ -316,9 +273,7 @@ st.markdown(
 
 .stButton > button:hover {{
     transform: translateY(-3px);
-
-    box-shadow:
-        0 10px 25px rgba(109,40,217,0.30);
+    box-shadow: 0 10px 25px rgba(109,40,217,0.30);
 }}
 
 .response-card {{
@@ -326,10 +281,7 @@ st.markdown(
     padding: 26px;
     border-radius: 20px;
     border-left: 5px solid #7c3aed;
-
-    box-shadow:
-        0 8px 25px rgba(50,30,100,0.08);
-
+    box-shadow: 0 8px 25px rgba(50,30,100,0.08);
     margin-top: 20px;
     color: {text_color};
     line-height: 1.7;
@@ -351,17 +303,35 @@ st.markdown(
 
 
 # ============================================================
-# TOP SETTINGS BUTTON
+# DISPLAY AI RESPONSE
+# ============================================================
+
+def display_response(title, answer):
+
+    safe_answer = html.escape(answer).replace("\n", "<br>")
+
+    st.html(f"""
+    <div class="response-card">
+
+        <strong>{title}</strong>
+
+        <br><br>
+
+        {safe_answer}
+
+    </div>
+    """)
+
+
+# ============================================================
+# SETTINGS
 # ============================================================
 
 if st.session_state.page != "home":
 
-    col_back, col_space, col_settings = st.columns(
-        [2, 7, 2]
-    )
+    col_back, col_space, col_settings = st.columns([2, 7, 2])
 
     with col_back:
-
         st.button(
             "← Home",
             on_click=go_home,
@@ -370,30 +340,14 @@ if st.session_state.page != "home":
 
     with col_settings:
 
-        settings_open = st.popover("⋮ Settings")
-
-        with settings_open:
+        with st.popover("⋮ Settings"):
 
             st.markdown("### ⚙️ Settings")
             st.markdown("**🎨 Theme**")
 
-            st.button(
-                "☀️ Light",
-                on_click=set_light,
-                key="theme_light"
-            )
-
-            st.button(
-                "🌙 Dark",
-                on_click=set_dark,
-                key="theme_dark"
-            )
-
-            st.button(
-                "🖥️ System",
-                on_click=set_system,
-                key="theme_system"
-            )
+            st.button("☀️ Light", on_click=set_light, key="theme_light")
+            st.button("🌙 Dark", on_click=set_dark, key="theme_dark")
+            st.button("🖥️ System", on_click=set_system, key="theme_system")
 
             st.caption(
                 f"Current theme: {st.session_state.theme.title()}"
@@ -401,44 +355,24 @@ if st.session_state.page != "home":
 
 else:
 
-    col_title, col_space, col_settings = st.columns(
-        [5, 4, 2]
-    )
+    col_title, col_space, col_settings = st.columns([5, 4, 2])
 
     with col_title:
-
-        st.html("""
-        <div class="app-mini-title">
-            🎓 StudyX
-        </div>
-        """)
+        st.markdown(
+            '<div class="app-mini-title">🎓 StudyX</div>',
+            unsafe_allow_html=True
+        )
 
     with col_settings:
 
-        settings_open = st.popover("⋮ Settings")
-
-        with settings_open:
+        with st.popover("⋮ Settings"):
 
             st.markdown("### ⚙️ Settings")
             st.markdown("**🎨 Theme**")
 
-            st.button(
-                "☀️ Light",
-                on_click=set_light,
-                key="home_theme_light"
-            )
-
-            st.button(
-                "🌙 Dark",
-                on_click=set_dark,
-                key="home_theme_dark"
-            )
-
-            st.button(
-                "🖥️ System",
-                on_click=set_system,
-                key="home_theme_system"
-            )
+            st.button("☀️ Light", on_click=set_light, key="home_theme_light")
+            st.button("🌙 Dark", on_click=set_dark, key="home_theme_dark")
+            st.button("🖥️ System", on_click=set_system, key="home_theme_system")
 
             st.caption(
                 f"Current theme: {st.session_state.theme.title()}"
@@ -455,14 +389,14 @@ if st.session_state.page == "home":
     <div class="hero">
 
         <div class="hero-title">
-            🎓 Offline AI Tutor
+            🎓 StudyX
         </div>
 
         <div class="hero-subtitle">
-            Your Personal AI-Powered Study Companion
+            Your AI-Powered Study Assistant
         </div>
 
-        <div class="offline-badge">
+        <div class="cloud-badge">
             ☁️ Groq Cloud AI &nbsp; • &nbsp;
             📚 Smart Learning &nbsp; • &nbsp;
             ⚡ Fast Responses
@@ -488,24 +422,16 @@ if st.session_state.page == "home":
 
     col1, col2, col3 = st.columns(3)
 
-    # AI TUTOR CARD
-
     with col1:
 
         st.html("""
         <div class="feature-card">
-
             <div class="feature-icon">🤖</div>
-
-            <div class="feature-title">
-                Ask AI Tutor
-            </div>
-
+            <div class="feature-title">Ask AI Tutor</div>
             <div class="feature-text">
-                Ask questions and get instant
-                explanations from your AI tutor.
+                Ask questions and get instant explanations
+                from your AI tutor.
             </div>
-
         </div>
         """)
 
@@ -515,24 +441,16 @@ if st.session_state.page == "home":
             key="home_tutor"
         )
 
-    # QUIZ CARD
-
     with col2:
 
         st.html("""
         <div class="feature-card">
-
             <div class="feature-icon">🧠</div>
-
-            <div class="feature-title">
-                Generate Quiz
-            </div>
-
+            <div class="feature-title">Generate Quiz</div>
             <div class="feature-text">
                 Create AI-generated multiple-choice
                 questions to test your knowledge.
             </div>
-
         </div>
         """)
 
@@ -542,24 +460,16 @@ if st.session_state.page == "home":
             key="home_quiz"
         )
 
-    # PDF CARD
-
     with col3:
 
         st.html("""
         <div class="feature-card">
-
             <div class="feature-icon">📚</div>
-
-            <div class="feature-title">
-                Ask from PDF
-            </div>
-
+            <div class="feature-title">Ask from PDF</div>
             <div class="feature-text">
                 Upload your study material and ask
                 questions directly from your PDF.
             </div>
-
         </div>
         """)
 
@@ -572,7 +482,7 @@ if st.session_state.page == "home":
     st.html("""
     <div class="footer">
 
-        🎓 Offline AI Tutor
+        🎓 StudyX
 
         <br><br>
 
@@ -608,16 +518,11 @@ elif st.session_state.page == "tutor":
         placeholder="Example: Explain machine learning in simple words..."
     )
 
-    if st.button(
-        "✨ Ask AI",
-        key="ask_ai"
-    ):
+    if st.button("✨ Ask AI", key="ask_ai"):
 
         if not question.strip():
 
-            st.warning(
-                "Please enter a question."
-            )
+            st.warning("Please enter a question.")
 
         else:
 
@@ -635,35 +540,13 @@ Question:
 
             try:
 
-                with st.spinner(
-                    "🤖 AI Tutor is thinking..."
-                ):
-
+                with st.spinner("🤖 AI Tutor is thinking..."):
                     answer = ask_ai(prompt)
 
-                safe_answer = html.escape(
-                    answer
-                ).replace("\n", "<br>")
-
-                st.html(f"""
-                <div class="response-card">
-
-                    <strong>
-                        🤖 AI Tutor Response
-                    </strong>
-
-                    <br><br>
-
-                    {safe_answer}
-
-                </div>
-                """)
+                display_response("🤖 AI Tutor Response", answer)
 
             except Exception as e:
-
-                st.error(
-                    f"❌ Something went wrong: {e}"
-                )
+                st.error(f"❌ Something went wrong: {e}")
 
 
 # ============================================================
@@ -687,16 +570,11 @@ elif st.session_state.page == "quiz":
         placeholder="Example: Artificial Intelligence"
     )
 
-    if st.button(
-        "🧠 Generate Quiz",
-        key="generate_quiz"
-    ):
+    if st.button("🧠 Generate Quiz", key="generate_quiz"):
 
         if not topic.strip():
 
-            st.warning(
-                "Please enter a topic."
-            )
+            st.warning("Please enter a topic.")
 
         else:
 
@@ -720,35 +598,13 @@ Use simple student-friendly language.
 
             try:
 
-                with st.spinner(
-                    "🧠 Creating your quiz..."
-                ):
-
+                with st.spinner("🧠 Creating your quiz..."):
                     answer = ask_ai(prompt)
 
-                safe_answer = html.escape(
-                    answer
-                ).replace("\n", "<br>")
-
-                st.html(f"""
-                <div class="response-card">
-
-                    <strong>
-                        🧠 Your Quiz
-                    </strong>
-
-                    <br><br>
-
-                    {safe_answer}
-
-                </div>
-                """)
+                display_response("🧠 Your Quiz", answer)
 
             except Exception as e:
-
-                st.error(
-                    f"❌ Something went wrong: {e}"
-                )
+                st.error(f"❌ Something went wrong: {e}")
 
 
 # ============================================================
@@ -801,16 +657,11 @@ elif st.session_state.page == "pdf":
                     placeholder="Example: What is the main topic of this document?"
                 )
 
-                if st.button(
-                    "📖 Ask from PDF",
-                    key="ask_pdf"
-                ):
+                if st.button("📖 Ask from PDF", key="ask_pdf"):
 
                     if not question.strip():
 
-                        st.warning(
-                            "Please enter a question."
-                        )
+                        st.warning("Please enter a question.")
 
                     else:
 
@@ -842,32 +693,15 @@ Explain the answer in simple language.
                             with st.spinner(
                                 "📚 Reading your study material..."
                             ):
-
                                 answer = ask_ai(prompt)
 
-                            safe_answer = html.escape(
+                            display_response(
+                                "📚 PDF Tutor Response",
                                 answer
-                            ).replace("\n", "<br>")
-
-                            st.html(f"""
-                            <div class="response-card">
-
-                                <strong>
-                                    📚 PDF Tutor Response
-                                </strong>
-
-                                <br><br>
-
-                                {safe_answer}
-
-                            </div>
-                            """)
+                            )
 
                         except Exception as e:
-
-                            st.error(
-                                f"❌ Something went wrong: {e}"
-                            )
+                            st.error(f"❌ Something went wrong: {e}")
 
             else:
 
@@ -877,6 +711,4 @@ Explain the answer in simple language.
 
         except Exception as e:
 
-            st.error(
-                f"❌ Unable to read the PDF: {e}"
-            )
+            st.error(f"❌ Unable to read the PDF: {e}")
