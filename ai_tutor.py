@@ -10,7 +10,7 @@ from groq import Groq
 # ============================================================
 
 st.set_page_config(
-    page_title="Offline AI Tutor",
+    page_title="StudyX",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -409,7 +409,7 @@ else:
 
         st.html("""
         <div class="app-mini-title">
-            🎓 Offline AI Tutor
+            🎓 StudyX
         </div>
         """)
 
